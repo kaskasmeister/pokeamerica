@@ -20,6 +20,8 @@ import { FormPokemonComponent } from './form-pokemon/app-form-pokemon.component'
 import { PokeServeService } from './services/pokeserver.service';
 import { HttpClientModule } from "@angular/common/http";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoadScreenComponent } from './load-screen/load-screen.component';
+import { LoadScreenService } from './services/loads-screen.service';
 
 
 const maskConfig: Partial<IConfig> = {
@@ -29,6 +31,7 @@ const maskConfig: Partial<IConfig> = {
   declarations: [
     AppComponent,
     FormPokemonComponent,
+    LoadScreenComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -55,7 +58,8 @@ const maskConfig: Partial<IConfig> = {
   providers: [
     provideEnvironmentNgxMask(maskConfig),
     { provide: MAT_DATE_LOCALE, useValue: "es-ES" },
-    PokeServeService
+    PokeServeService,
+    LoadScreenService
   ],
   bootstrap: [AppComponent]
 })

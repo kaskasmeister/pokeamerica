@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MAT_DATE_LOCALE } from "@angular/material/core";
 import { MatDatepickerInputEvent } from "@angular/material/datepicker";
 import { PokeServeService } from "../services/pokeserver.service";
+import { LoadScreenService } from "../services/loads-screen.service";
 
 @Component({
   selector: "app-form-pokemon",
@@ -16,6 +17,8 @@ export class FormPokemonComponent {
   image: any | undefined;
   esMayorDeEdad = false;
 
+  name: string | null = "Imágen perfil";
+
   profileForm = new FormGroup({
     nombre: new FormControl("", [Validators.required]),
     pasatiempos: new FormControl(""),
@@ -25,6 +28,7 @@ export class FormPokemonComponent {
 
   constructor(
     private api: PokeServeService,
+    private loadScreenService: LoadScreenService,
     @Inject(MAT_DATE_LOCALE) private _locale: string,
   ) {
     const currentYear = new Date().getFullYear();
@@ -50,24 +54,25 @@ export class FormPokemonComponent {
     };
   }
 
-  getDateFormatString(): string {
-    if (this._locale === 'ja-JP') {
-      return 'YYYY/MM/DD';
-    } else if (this._locale === 'fr') {
-      return 'DD/MM/YYYY';
-    }
-    return '';
-  }
-
-  onSubmit(form: any) {
+  async onSubmit(form: any) {
     if (this.profileForm.valid && this.image) {
-      this.api.getData().subscribe(data => {
-        console.log(data)
-      });
+      this.loadScreenService.show();
+      setTimeout(() => {
+        this.loadScreenService.hide();
+      }, 8000);
+
+      this.name = this.profileForm.controls.nombre.value;
+      const resp = await this.api.getDataPromise("https://pokeapi.co/api/v2/pokemon");
+      const list: { name: string, url: string, spriteUrl?: string }[] = resp.results;
+
+      for (let item of list) {
+        const respPkm = await this.api.getPokemon(item.name);
+        console.log(item.name, respPkm.sprites.front_shiny, respPkm.types)
+      }
     } else {
       alert("Seleccione una imágen")
     }
-    
+
   }
 
   verificarFechaNacimiento(event: MatDatepickerInputEvent<Date, string>) {
@@ -81,7 +86,7 @@ export class FormPokemonComponent {
       setTimeout(() => {
         this.esMayorDeEdad = age > 18;
         console.log(this.esMayorDeEdad)
-        if (this.esMayorDeEdad){
+        if (this.esMayorDeEdad) {
           this.profileForm.controls.dui.setValidators([Validators.required]);
           this.profileForm.controls.dui.updateValueAndValidity();
         }
