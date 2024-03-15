@@ -1,1 +1,96 @@
-/* You can add global styles to this file, and also import other style files */
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use "@angular/material" as mat;
+@use "pallete" as pallete;
+
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+
+$pokeamerica-primary: mat.define-palette(pallete.$blue-palette);
+$pokeamerica-accent: mat.define-palette(
+  pallete.$green-palette,
+  500,
+  A100,
+  A400
+);
+
+// The warn palette is optional (defaults to red).
+$pokeamerica-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$pokeamerica-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $pokeamerica-primary,
+      accent: $pokeamerica-accent,
+      warn: $pokeamerica-warn,
+    ),
+  )
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($pokeamerica-theme);
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@layer base {
+  html {
+    color: #868686;
+    font-weight: 400;
+    size: 18px;
+  }
+  h1 {
+    @apply text-[35px];
+    color: #185a7d;
+    font-weight: 600;
+    line-height: 52.2px;
+  }
+  h2 {
+    @apply text-[30px];
+    color: #185a7d;
+    font-weight: 600;
+  }
+}
+
+*,
+::before,
+::after {
+  border-style: none;
+}
+
+.mat-mdc-button.mat-primary {
+  background-color: #01426a;
+}
+
+.mat-mdc-button[disabled] {
+  background-color: #b1b1b1;
+  color: #555555 !important;
+}
+
+.mat-mdc-button {
+  color: #fff !important;
+  margin: 5px;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px !important;
+  height: 50px !important;
+  padding: 0 50px 0 50px !important;
+  border-radius: 10px !important;
+}
+
+.mat-calendar-period-button {
+  background-color: #01426a !important;
+}
