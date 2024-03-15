@@ -17,7 +17,11 @@ export class FormPokemonComponent {
   image: any | undefined;
   esMayorDeEdad = false;
 
+  show = true;
   name: string | null = "Imágen perfil";
+  name2: string |null = "Configuremos tu perfil";
+  list :{ name: string, url: string, spriteUrl?: string }[]= [];
+  list2: any= [];
 
   profileForm = new FormGroup({
     nombre: new FormControl("", [Validators.required]),
@@ -59,13 +63,17 @@ export class FormPokemonComponent {
       this.loadScreenService.show();
       setTimeout(() => {
         this.loadScreenService.hide();
-      }, 8000);
+      }, 5000);
 
+      this.show = false;
       this.name = this.profileForm.controls.nombre.value;
-      const resp = await this.api.getDataPromise("https://pokeapi.co/api/v2/pokemon");
-      const list: { name: string, url: string, spriteUrl?: string }[] = resp.results;
+      this.name2 = this.profileForm.controls.nombre.value;
 
-      for (let item of list) {
+      const resp = await this.api.getDataPromise("https://pokeapi.co/api/v2/pokemon");
+      this.list = resp.results;
+      this.list2 = this.profileForm.controls.pasatiempos.value;
+
+      for (let item of this.list) {
         const respPkm = await this.api.getPokemon(item.name);
         console.log(item.name, respPkm.sprites.front_shiny, respPkm.types)
       }
