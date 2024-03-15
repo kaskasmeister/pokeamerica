@@ -1,0 +1,133 @@
+<div>
+    <div class="flex mt-[45px] ml-[90px]">
+      <div class="text-primary">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-[2.5rem] h-[3.5rem]"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15.75 19.5 8.25 12l7.5-7.5"
+          />
+        </svg>
+      </div>
+      <h1><span class="font-[700]">¡Hola!</span> {{name2}}</h1>
+    </div>
+    <div class="mt-[12px] ml-[130px]" *ngIf="show">Queremos conocerte mejor.</div>
+  </div>
+  <div class="flex">
+    <div class="w-[50%] flex justify-center items-center p-16">
+      <div class="text-white w-[392px] h-[600px] bg-green rounded-2xl flex-col">
+        <div
+          class="flex flex-col justify-center items-center h-[70%] font-[400] text-[40px]"
+        >
+          <div class="my-10">{{name}}</div>
+          <div class="bg-white w-[250px] h-[250px] rounded-full flex justify-center items-center">
+            <img [src]="image ? image : '../assets/img/user.jpg'" class="rounded-full" />
+          </div>
+        </div>
+  
+        <div class="flex justify-center items-center h-[30%]">
+          <div
+            class="bg-white w-[80%] h-[70px] rounded-2xl text-green flex justify-center items-center px-5"
+          >
+            <input *ngIf="show"
+              class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-primary bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-primary file:px-3 file:py-[0.32rem] file:text-surface focus:border-primary focus:text-green focus:shadow-inset focus:outline-none dark:border-green/70 dark:text-primary file:dark:text-white"
+              type="file"
+              id="formFile"
+              accept="image/png, image/gif, image/jpeg" 
+              (change)="select($event)"
+            />
+            <div *ngIf="!show">
+                {{list2}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="w-[50%] flex justify-start items-center">
+      <form #f [formGroup]="profileForm" (ngSubmit)="onSubmit(f)" *ngIf="show">
+        <div class="flex-col w-[550px]">
+          <div>
+            <h2>Tu información</h2>
+          </div>
+          <div class="py-1">Ingresa tu información para completar tu perfil.</div>
+          <div class="py-6">
+            <p>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="nombre"/>
+                <mat-hint>Debe ingresar un nombre!</mat-hint>
+              </mat-form-field>
+            </p>
+            <p>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Pasatiempo favorito</mat-label>
+                <mat-select [(value)]="selected" multiple formControlName="pasatiempos">
+                  <mat-option>Ninguno</mat-option>
+                  <mat-option value="Futbol">Jugar Futbol</mat-option>
+                  <mat-option value="Basquetball">Jugar Basquetball</mat-option>
+                  <mat-option value="Tenis">Jugar Tenis</mat-option>
+                  <mat-option value="Voleibol">Jugar Voleibol</mat-option>
+                  <mat-option value="Fifa">Jugar Fifa</mat-option>
+                  <mat-option value="Videojuegos">Jugar Videojuegos</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </p>
+            <p>
+              <mat-form-field
+                class="example-full-width"
+                appearance="outline"
+                class="w-full"
+              >
+                <mat-label>Cumpleaños</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  [matDatepicker]="picker"
+                  formControlName="cumpleannos"
+                  [readonly]="true"
+                  (dateChange)="verificarFechaNacimiento($event)"
+                />
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="picker"                  
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </p>
+            <p>
+              <mat-form-field
+                appearance="outline"
+                class="w-full before:border-none after:border-none"
+              >
+                <mat-label>Documento</mat-label>
+                <input matInput placeholder="DUI" class="border-none"  mask="00000000-0" formControlName="dui" [readonly]="!esMayorDeEdad"/>
+              </mat-form-field>
+            </p>
+          </div>
+        </div>
+        <div class="flex justify-center items-center">
+          <button type="submit" mat-button color="primary" [disabled]="!profileForm.valid">Continuar</button>
+        </div>
+      </form>
+
+      <table *ngIf="!show">
+        <thead>
+          <th>Nombre</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of list; index as i; first as isFirst">
+            <td>{{item.name}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
